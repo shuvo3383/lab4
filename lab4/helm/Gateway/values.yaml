@@ -1,0 +1,32 @@
+replicaCount: 1
+
+image:
+  repository: your-docker-repo/gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+ingress:
+  enabled: false
+  name: ""
+  pathType: ImplementationSpecific
+  paths: []
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - /
+  tls: []  # Treated as a list of maps
+  # - secretName: chart-example-tls
+  #   hosts:
+  #     - chart-example.local

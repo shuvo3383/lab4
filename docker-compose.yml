@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  cars-service:
+    build: ./cars-service
+    ports:
+      - "8070:8070"
+
+  rental-service:
+    build: ./rental-service
+    ports:
+      - "8060:8060"
+
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "8050:8050"

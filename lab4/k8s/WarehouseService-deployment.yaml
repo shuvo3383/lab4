@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warehouseservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: warehouseservice
+  template:
+    metadata:
+      labels:
+        app: warehouseservice
+    spec:
+      containers:
+      - name: warehouseservice
+        image: warehouse-service:latest
+        ports:
+        - containerPort: 8070
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: warehouseservice
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8070
+    targetPort: 8070
+  selector:
+    app: warehouseservice

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./Gateway
+    ports:
+      - "8080:8080"
+
+  userservice:
+    build:
+      context: ./UserService
+    ports:
+      - "8050:8050"
+
+  orderservice:
+    build:
+      context: ./OrderService
+    ports:
+      - "8060:8060"
+
+  warehouseservice:
+    build:
+      context: ./WarehouseService
+    ports:
+      - "8070:8070"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    ports:
+      - "5432:5432"

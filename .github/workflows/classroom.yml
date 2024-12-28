@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: database
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Application assembly
+        run: |
+          echo "Assembling application..."
+      
+
+      - name: Build and push Docker images (using Docker Compose)
+        run: |
+          docker-compose build
+          docker-compose push
+
+      - name: Deploy to Kubernetes using Helm
+        run: |
+          helm upgrade --install userservice ./helm/UserService
+          helm upgrade --install orderservice ./helm/OrderService
+          helm upgrade --install warehouseservice ./helm/WarehouseService
+          helm upgrade --install gateway ./helm/Gateway
+
+      - name: Run tests
+        run: |
+          docker-compose up -d
+          sleep 10
+          curl -f http://localhost:8080/manage/health
+          curl -f http://localhost:8050/manage/health
+          curl -f http://localhost:8060/manage/health
+          curl -f http://localhost:8070/manage/health
+          docker-compose down
